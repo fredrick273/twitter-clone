@@ -1,0 +1,67 @@
+{% extends './base.html' %}
+
+{%load crispy_forms_tags %} 
+
+{% block title %}Profile{% endblock %}
+
+
+{% block content %}
+    <!--Profile--> 
+
+
+<div class="container py-5">
+	<h1>Profile</h1>
+	<form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="profile-pic">
+            <img src="{{ image }}" style="border-radius: 50%; height: 100px; width: 100px;"  id="pro" alt="profile-pic">
+        </label>
+        <p style="color: #a8a8a8e8;">@{{ username }}</p>
+        <input type="file" name="profile-pic" id="profile-pic" style="display: none;"> 
+    </div>
+
+
+            <div class="form-group">
+            <label for="fname" >First Name:</label>
+            <input type="text" class="form-control" id="formGroupExampleInput" value="{{ f_name }}" name="fname">
+            </div>
+        
+            <div class="form-group">
+                <label for="lname" >Last Name:</label>
+                <input type="text" class="form-control" id="formGroupExampleInput" value="{{ l_name }}" name="lname">
+                </div>
+
+        
+
+        <div class="form-group">
+        <label for="Bio" >Bio:</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" name="Bio" placeholder = "{{bio}}" rows="3"></textarea>     
+        </div>
+
+
+
+        <div class="form-group">
+		
+        <label for="Date_Birth">Date of Birth:</label>
+		<input type="date"  class="form-control" id="formGroupExampleInput" name ="Date_Birth" value = "{{ date }}" >
+        </div> 
+
+        
+               
+		<button class="btn btn-primary" type="submit">Update</button>
+        
+    </div>
+	</form>
+    <script>
+        const textarea = document.querySelector("textarea");
+    textarea.value = "{{bio}}";
+    </script>
+    <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+    </ul>
+
+
+{% endblock %}

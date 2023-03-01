@@ -1,0 +1,35 @@
+{% extends './base.html' %}
+
+{% block title %}{{username}}{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+<h1>
+    {{firstname}} {{lastname}}
+</h1>
+<p>
+@{{ username }}
+</p>
+
+<p>
+<img src="{{ image }}" style="border-radius: 50%; height: 100px; width: 100px;"  id="pro" alt="profile-pic"></p>
+
+
+<p>
+    {{bio}}
+</p>
+
+<p>
+    {{dob}}
+</p>
+
+<form action="{% url 'follow' %}" method="POST">
+    {% csrf_token %}
+    <button type="submit", name="ID" style="background-color: white
+    ;" class="tweet-date" value="{{ id }}">Follow</button>
+  </form>
+
+</div>
+
+{% endblock %}

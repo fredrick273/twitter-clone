@@ -1,0 +1,112 @@
+{% extends './base.html' %}
+
+{%load crispy_forms_tags %} 
+
+{% block title %}Tweets{% endblock %}
+
+{% block style %}
+
+<style>
+     /* Light mode theme */
+     body {
+      /* background-color: #fff; */
+      background-color: black;
+      color: #333;
+    }
+    a{
+      color: white;
+      text-decoration: none;
+      cursor: text;
+      cursor: pointer;
+    }
+
+
+    a:hover {
+      text-decoration: none;
+      color: white;
+      cursor: pointer;
+    }
+    .card {
+      background-color: black ;
+      border-style: border;
+      border-color: #505458;      
+    }
+    .card-header {
+      background-color: black;
+      display: flex;
+      align-items: center;
+      color: while;
+    }
+    .card-footer {
+      background-color: black;
+      color: white;
+    }
+    .tweet-date {
+      font-size: 12px;
+      color: #bbb;
+    }
+    .profile-pic {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    #tweet-pic{
+      max-height: 200px;
+    }
+  </style>
+
+{% endblock %}
+
+
+{% block content %}
+
+{% if messages %}
+    <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+{{ username }}
+    <div class="container mt-3">
+
+{% for tweet in tweets %}
+<div class="card mb-3">
+    <div class="card-header d-flex align-items-center">
+      <img class="profile-pic" src="{{ tweet.user.pic.url }}" alt="Profile Pic">
+      <div>
+<a  href="{% url 'user'%}@{{tweet.user.user.username}}"><h5>{{tweet.user.user.first_name}} {{tweet.user.user.last_name}}</h5></a>
+<p class="tweet-date">{{tweet.created_time}}</p>
+</div>
+</div>
+<a href="{% url 'tweet' %}{{tweet.id}}">
+<div class="card-body">
+<p>{{tweet.content}}</p>
+{% if tweet.image != "NULL" %}
+
+<img id="tweet-pic" class="img-fluid" src="{{ tweet.image.url }}" alt="">
+{% endif %}
+</div>
+</a>
+<div class="card-footer d-flex justify-content-between">
+  <form action="{% url 'like' %}" method="POST">
+    {% csrf_token %}
+    <button type="submit", name="ID" style="background-color: black
+    ;" class="tweet-date" value="{{ tweet.id }}">Like</button>
+  </form>
+  <p class="tweet-date">
+    <i class="fas fa-heart"></i>
+    <span class="ml-2">{{tweet.totallike}}</span>
+  </p>
+  <a href="{% url 'tweet' %}{{ tweet.id }}"><p class="tweet-date">Replies:</p></a>
+  <p class="tweet-date">{{tweet.replycount}}</p>
+</div>
+</div>
+
+{% endfor %}
+</div>
+<script src="https://kit.fontawesome.com/your-fontawesome-kit-id.js"></script>
+
+{% endblock %}
