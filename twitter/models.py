@@ -6,8 +6,6 @@ class Profile(models.Model):
     pic = models.ImageField(upload_to='media/',default='default.jpg')
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     birth_date = models.DateField(null=True,blank=True)
-    totalfollowers = models.IntegerField(null=True,blank=True)
-    totalfollowing = models.IntegerField(null=True,blank=True)
     bio = models.TextField(max_length=200,blank=True)
     creation_date = models.DateTimeField(auto_now_add=True,blank= True)
 
@@ -16,8 +14,8 @@ class Profile(models.Model):
         return self.user.username
     
 class Followers(models.Model):
-    followersprofile = models.ManyToManyField(Profile,related_name="profile_followers",blank=True)
-    followingprofile = models.ManyToManyField(Profile,related_name="profile_following",blank=True)
+    followersprofile = models.ManyToManyField(Profile,related_name="profile_followers")
+    followingprofile = models.ManyToManyField(Profile,related_name="profile_following")
     profileuser = models.ForeignKey(Profile,on_delete=models.CASCADE)
 
     def totalfollowers(self):

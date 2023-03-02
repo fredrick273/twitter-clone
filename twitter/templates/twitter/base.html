@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://kit.fontawesome.com/cc0e12b30c.css" crossorigin="anonymous">
-    
-    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <title>{% block title %} Home {% endblock %} </title>
 
     {% block style %}{% endblock %}
@@ -18,42 +16,47 @@
         color: white;
     }
     .sidebar {
-  height: 100vh;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 200px;
+        height: 100%;
+        background-color: black;
+        overflow-y: hidden;
+        border-right: solid 1px;
+        border-color: #505458;
+        color: #fff;
+    }
 
-  background-color: black;
-  overflow-y: hidden;
-  border-right: solid 1px;
-  border-color: #505458;
-  color: #fff;
-}
+    .list-group-item {
+        border: none;
+        overflow-y: hidden;
+        background-color: black;
+        color: #fff;
+    }
 
-.list-group-item {
-  border: none;
-  overflow-y: hidden;
-  background-color: black;
-  color: #fff;
-}
+    .list-group-item:hover {
+        background-color: #444;
+    }
 
-.list-group-item:hover {
-  background-color: #444;
-}
+    .text-center {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
 
-.text-center {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
+    .p-3 {
+        padding: 1.5rem;
+    }
 
-.p-3 {
-  padding: 1.5rem;
-}
+    .text-secondary {
+        color: #fff;
+    }
 
-.text-secondary {
-  color: #fff;
-}
-.main-content {
-  overflow-y: auto;
-}
-
+    .main-content {
+        margin-left: 200px;
+        overflow-y: auto;
+    }
    </style>
 
 </head>
@@ -68,7 +71,7 @@
               <a href="{% url 'tweets'%}" class="list-group-item list-group-item-action text-white">Tweets</a>
               <a href="{% url 'create' %}" class="list-group-item list-group-item-action text-white">Create</a>
 
-              <a href="{% url 'profile' %}" class="list-group-item list-group-item-action text-white">Profile</a>
+              <a href="{% url 'user' %}" class="list-group-item list-group-item-action text-white">Profile</a>
               <a href="{% url 'logout' %}" class="list-group-item list-group-item-action text-white">Logout</a>
             </div>
           </div>

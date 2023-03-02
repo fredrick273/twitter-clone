@@ -4,31 +4,62 @@
 
 {% block content %}
 
-<div class="container py-5">
-<h1>
-    {{firstname}} {{lastname}}
-</h1>
-<p>
-@{{ username }}
-</p>
+<div class="container py-5 bg-black" style="width: 600px; margin: 0 auto;">
+    <div class="text-center">
+        <img src="{{ image }}" style="border-radius: 50%; height: 150px; width: 150px;" id="pro" alt="profile-pic">
+        <h1 style="font-size: 26px; color: white; font-weight: bold;">{{firstname}} {{lastname}}</h1>
+        <p style="font-size: 26px; color: #1DA1F2; font-weight: bold;">@{{ username }}</p>
+    </div>
 
-<p>
-<img src="{{ image }}" style="border-radius: 50%; height: 100px; width: 100px;"  id="pro" alt="profile-pic"></p>
+    <div class="row mt-5">
+        <div class="col text-center">
+            <p style="font-size: 20px; color: white; font-weight: bold;">Tweets</p>
+            <p style="font-size: 24px; color: #1DA1F2; font-weight: bold;">{{ tweetinfo.count }}</p>
+        </div>
+        <div class="col text-center">
+            <p style="font-size: 20px; color: white; font-weight: bold;">Followers</p>
+            <p style="font-size: 24px; color: #1DA1F2; font-weight: bold;">{{ followinfo.totalfollowers }}</p>
+        </div>
+        <div class="col text-center">
+            <p style="font-size: 20px; color: white; font-weight: bold;">Following</p>
+            <p style="font-size: 24px; color: #1DA1F2; font-weight: bold;">{{ followinfo.totalfollowing }}</p>
+        </div>
+    </div>
 
+    <hr style="border-top: 1px solid #38444D;">
 
-<p>
-    {{bio}}
-</p>
+    <div class="row mt-5">
+        <div class="col">
+            <p style="font-size: 18px; color: #8899A6; font-weight: bold;">Bio:</p>
+            <p style="font-size: 16px; color: #FFFFFF; line-height: 1.5;">{{bio}}</p>
+        </div>
+    </div>
 
-<p>
-    {{dob}}
-</p>
+    <div class="row mt-4">
+        <div class="col">
+            <p style="font-size: 18px; color: #8899A6; font-weight: bold;">Born:</p>
+            <p style="font-size: 16px; color: #FFFFFF;">{{dob}}</p>
+        </div>
+    </div>
 
-<form action="{% url 'follow' %}" method="POST">
-    {% csrf_token %}
-    <button type="submit", name="ID" style="background-color: white
-    ;" class="tweet-date" value="{{ id }}">Follow</button>
-  </form>
+    <hr style="border-top: 1px solid #38444D;">
+
+    <div class="row mt-5">
+        <div class="col text-center">
+            {% if currentprofile == userprofile %}
+            <button onclick="location.href = '{% url 'profile' %}';" style="background-color: #d7dfe5; color: white; padding: 10px 20px; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s ease;">Edit Profile</button>
+            {% else %}
+            <form action="{% url 'follow' %}" method="POST">
+                {% csrf_token %}
+                {% if currentprofile in followinfo.followersprofile.all %}
+                <button type="submit" value="{{ id }}" name="ID" style="background-color: #d7dfe5; color: white; padding: 10px 20px; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s ease;">Unfollow</button>
+                {% else %}
+                <button type="submit" value="{{ id }}" name="ID" style="background-color: #1DA1F2; color: white; padding: 10px 20px; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s ease;">Follow</button>
+                {% endif %}
+            </form>
+            {% endif %}
+        </div>
+    </div>
 
 </div>
 

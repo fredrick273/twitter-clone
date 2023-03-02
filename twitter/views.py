@@ -10,6 +10,13 @@ from django.contrib.auth.models import User
 # Create your views here.
 site = "http://127.0.0.1:8000/"
 
+def profileRedirect(request):
+	if request.user.is_authenticated:
+		return redirect(f"{resolve_url('user')}@{request.user.username}")
+	else:
+		return redirect(resolve_url("login"))
+
+
 def liketweet(request):
 	user = request.user
 	tweetid = request.POST.get("ID")
@@ -28,6 +35,7 @@ def follow(request):
 	following = Profile.objects.get(id=prof)
 	profilefollower = Followers.objects.get(profileuser=following)
 	profilefollowing = Followers.objects.get(profileuser=follower)
+	following.user.username
 	if not follower in profilefollower.followersprofile.all():
 		profilefollower.followersprofile.add(follower)
 		profilefollowing.followingprofile.add(following)
@@ -35,7 +43,7 @@ def follow(request):
 		profilefollower.followersprofile.remove(follower)
 		profilefollowing.followingprofile.remove(following)
 
-	return redirect(resolve_url("tweets"))
+	return redirect(f"{resolve_url('user')}@{following.user.username}")
 
 def home(request):
     if request.user.is_authenticated:
@@ -115,7 +123,8 @@ def profile(request):
 			date = str(current_profile.birth_date)
 			fname = current_profile.user.first_name
 			lname = current_profile.user.last_name
-			return render(request,"twitter/profile.html",{"date":date,"bio":current_profile.bio,"f_name":fname,"l_name":lname,"site":site,'image':current_profile.pic.url,'username':request.user.username})
+			followinfo = Followers.objects.get(profileuser = current_profile)
+			return render(request,"twitter/profile.html",{"date":date,"bio":current_profile.bio,"f_name":fname,"l_name":lname,"site":site,'image':current_profile.pic.url,'username':request.user.username,"followinfo":followinfo})
 		elif request.method == "POST":
 			date = request.POST.get("Date_Birth")
 			bio = request.POST.get("Bio")
@@ -127,7 +136,7 @@ def profile(request):
 			usr.last_name = lname
 			usr.save()
 			pro = Profile.objects.get(user = request.user)
-			pro.date = date
+			pro.birth_date = date
 			pro.bio = bio
 			if profilepic:
 				pro.pic = profilepic
@@ -159,10 +168,16 @@ def createTweet(request):
 		return redirect(site)
 	
 def userpage(request,**kwargs):
-	requser = kwargs["username"][1:]
-	user = get_object_or_404(User,username=requser)
-	prof = Profile.objects.get(user=user)
-	return render(request,"twitter/profileview.html",{"username":user.username,"firstname":user.first_name,"lastname":user.last_name,"bio":prof.bio,"dob":prof.birth_date,'image':prof.pic.url,"id":prof.id})
+	if request.user.is_authenticated:
+		requser = kwargs["username"][1:]
+		user = get_object_or_404(User,username=requser)
+		prof = Profile.objects.get(user=user)
+		followinfo = Followers.objects.get(profileuser=prof)
+		currprof = Profile.objects.get(user=request.user)
+		tweet = Tweet.objects.filter(user=prof)
+		return render(request,"twitter/profileview.html",{"username":user.username,"firstname":user.first_name,"lastname":user.last_name,"bio":prof.bio,"dob":prof.birth_date,'image':prof.pic.url,"id":prof.id,"followinfo":followinfo,"tweetinfo":tweet,"currentprofile":currprof,"userprofile":prof})
+	else:
+		return redirect(resolve_url("Home"))
 
 def tweet(request,**kwargs):
 	tweetid = kwargs["tweetid"]

@@ -1,19 +1,68 @@
 {% extends './base.html' %}
 
-{%load crispy_forms_tags %} 
 
-{% block title %}Create account{% endblock %}
+{% block title %}Create Account{% endblock %}
+
+{% block style %}
+<style>
+    .container {
+        max-width: 500px;
+    }
+    input{display:block;width:100%;height:calc(2.25rem + 2px);padding:.375rem .75rem;font-size:1rem;line-height:1.5;color:#495057;background-color:#fff;background-clip:padding-box;border:1px solid #ced4da;border-radius:.25rem;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out}
+    .form-control {
+        background-color: #15202b;
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+    }
+
+    .form-control:focus {
+        background-color: #192734;
+        color: #fff;
+        box-shadow: none;
+    }
+
+    .form-control::placeholder {
+        color: #8899a6;
+    }
+
+    .btn-primary {
+        background-color: #1da1f2;
+        border: none;
+        border-radius: 999px;
+        font-weight: bold;
+        width: 100%;
+    }
+
+    .btn-primary:hover {
+        background-color: #0c8ddb;
+    }
+
+    .text-center {
+        color: #8899a6;
+    }
+
+    .text-center a {
+        color: #1da1f2;
+        font-weight: bold;
+    }
+
+    .form-label {
+        color: #8899a6;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-    <!--Register--> 
-<div class="container py-5">
-	<h1>Register</h1>
-	<form method="POST">
-		{% csrf_token %}
-		{{ register_form|crispy }}                    
-		<button class="btn btn-primary" type="submit">Register</button>
-	</form>
-	<p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
+<div class="container my-5">
+    <h1 class="h3 font-weight-normal mb-4">Create your account</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ register_form }}
+        <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">Create account</button>
+    </form>
+    <p class="text-center mt-4">Already have an account? <a href="/login">Log in now »</a></p>
     {% if messages %}
     <ul class="messages">
     {% for message in messages %}
@@ -21,5 +70,5 @@
     {% endfor %}
     </ul>
     {% endif %}
-
+</div>
 {% endblock %}
