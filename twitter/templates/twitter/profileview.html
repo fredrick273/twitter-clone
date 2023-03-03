@@ -2,6 +2,20 @@
 
 {% block title %}{{username}}{% endblock %}
 
+{% block style %}
+<style>
+.linkhower:hover{
+    text-decoration: none;
+}
+#minititle{
+    font-size: 20px; color: white; font-weight: bold;
+}
+#minititle:hover{
+    color: #1DA1F2;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 
 <div class="container py-5 bg-black" style="width: 600px; margin: 0 auto;">
@@ -12,17 +26,27 @@
     </div>
 
     <div class="row mt-5">
+        <!-- <a href="{% url 'user' %}@{{ username }}/tweets" class="likehower"> -->
         <div class="col text-center">
-            <p style="font-size: 20px; color: white; font-weight: bold;">Tweets</p>
+            <a href="{% url 'user' %}@{{ username }}/tweets" class="linkhower">
+            <div id="minititle">
+            <p>Tweets</p>
             <p style="font-size: 24px; color: #1DA1F2; font-weight: bold;">{{ tweetinfo.count }}</p>
+            </div>
+            </a>
         </div>
+        <!-- </a> -->
         <div class="col text-center">
-            <p style="font-size: 20px; color: white; font-weight: bold;">Followers</p>
+            <a href="{% url 'user' %}@{{ username }}/followers" class="linkhower">
+            <p id="minititle">Followers</p>
             <p style="font-size: 24px; color: #1DA1F2; font-weight: bold;">{{ followinfo.totalfollowers }}</p>
+            </a>
         </div>
         <div class="col text-center">
-            <p style="font-size: 20px; color: white; font-weight: bold;">Following</p>
+            <a href="{% url 'user' %}@{{ username }}/following" class="linkhower">
+            <p id="minititle">Following</p>
             <p style="font-size: 24px; color: #1DA1F2; font-weight: bold;">{{ followinfo.totalfollowing }}</p>
+        </a>
         </div>
     </div>
 

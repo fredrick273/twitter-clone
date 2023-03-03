@@ -1,0 +1,107 @@
+{% extends './base.html' %}
+
+{% block title %}Tweets{% endblock %}
+
+{% block style %}
+
+<style>
+     /* Light mode theme */
+     body {
+      /* background-color: #fff; */
+      background-color: black;
+      color: #333;
+    }
+    a{
+      color: white;
+      text-decoration: none;
+      cursor: text;
+      cursor: pointer;
+    }
+
+
+    a:hover {
+      text-decoration: none;
+      color: white;
+      cursor: pointer;
+    }
+    .card {
+      background-color: black ;
+      border-style: border;
+      border-color: #505458;  
+      width: 600px;   
+      display: block; 
+    }
+    .card-header {
+      background-color: black;
+      display: flex;
+      align-items: center;
+      color: while;
+    }
+    .card-footer {
+      background-color: black;
+      color: white;
+    }
+    .tweet-date {
+      font-size: 12px;
+      color: #bbb;
+    }
+    .profile-pic {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    #tweet-pic{
+      max-height: 200px;
+    }
+    
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    .btn-primary {
+  background-color: #1DA1F2;
+  color: white;
+  border-radius: 20px;
+  border: none;
+  padding: 5px 15px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+  </style>
+
+{% endblock %}
+
+
+{% block content %}
+
+{% if messages %}
+    <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="container mt-3">
+
+        {% for followprofile in followinfo %}
+        <div class="card mb-3">
+          <div class="card-header d-flex align-items-center">
+            <img class="profile-pic" src="{{ followprofile.pic.url }}" alt="Profile Pic">
+            <div>
+              <a href="{% url 'user' %}@{{ followprofile.user.username }}"><h5>{{ followprofile.user.first_name }} {{ followprofile.user.last_name }}</h5></a>
+              <p class="tweet-date">@{{ followprofile.user.username }}</p>
+            </div>
+            <button onclick="location.href = '{% url 'user' %}@{{ followprofile.user.username }}';" class="btn btn-primary ml-auto">view</button>
+          </div>
+        </div>
+        {% endfor %}
+        
+</div>
+<script src="https://kit.fontawesome.com/your-fontawesome-kit-id.js"></script>
+
+{% endblock %}

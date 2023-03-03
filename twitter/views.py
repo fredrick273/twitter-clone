@@ -8,7 +8,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 
 # Create your views here.
-site = "http://127.0.0.1:8000/"
 
 def profileRedirect(request):
 	if request.user.is_authenticated:
@@ -16,6 +15,27 @@ def profileRedirect(request):
 	else:
 		return redirect(resolve_url("login"))
 
+def profileFollowlist(request,**kwargs):
+	if request.user.is_authenticated:
+		requser = kwargs["username"][1:]
+		user = get_object_or_404(User,username=requser)
+		prof = Profile.objects.get(user=user)
+		followinfo = Followers.objects.get(profileuser=prof)
+		followlist = followinfo.followersprofile.all()
+		return render(request,"twitter/followinfo.html",{"followinfo":followlist})
+	else:
+		return redirect(resolve_url("Home"))
+
+def profileFollowinglist(request,**kwargs):
+	if request.user.is_authenticated:
+		requser = kwargs["username"][1:]
+		user = get_object_or_404(User,username=requser)
+		prof = Profile.objects.get(user=user)
+		followinfo = Followers.objects.get(profileuser=prof)
+		followlist = followinfo.followingprofile.all()
+		return render(request,"twitter/followinfo.html",{"followinfo":followlist})
+	else:
+		return redirect(resolve_url("Home"))
 
 def liketweet(request):
 	user = request.user
@@ -47,9 +67,9 @@ def follow(request):
 
 def home(request):
     if request.user.is_authenticated:
-        return redirect(f"{site}tweets/")
+        return redirect(resolve_url("tweets"))
     else:
-	    return redirect(f"{site}login/")
+	    return redirect(resolve_url("login"))
 
 def register(request):
 	if not request.user.is_authenticated:
@@ -63,12 +83,12 @@ def register(request):
 				followers = Followers.objects.create(profileuser=profile)
 				followers.save()
 				messages.success(request, "Registration successful." )
-				return redirect(f"{site}/profile")
+				return redirect(resolve_url("Home"))
 			messages.error(request, "Unsuccessful registration. Invalid information.")
 		form = NewUserForm()
-		return render (request=request, template_name="twitter/Register.html", context={"register_form":form,"site":site})
+		return render (request=request, template_name="twitter/Register.html", context={"register_form":form})
 	else:
-		return redirect(site)
+		return redirect(resolve_url("Home"))
 
 def userLogin(request):
 	if not request.user.is_authenticated:
@@ -82,7 +102,7 @@ def userLogin(request):
 					login(request,user)
 					messages.info(request,f"Logged in as {username} ")
 					
-					return redirect(f"{site}tweets/")
+					return redirect(resolve_url("tweets"))
 				else:
 					messages.error(request,"Invalid username or password")
 					form = AuthenticationForm()
@@ -96,7 +116,7 @@ def userLogin(request):
 			form = AuthenticationForm()
 			return render(request,"twitter/login.html",{"login_form":form})
 	else:
-		return redirect(site)
+		return redirect(resolve_url("Home"))
 
 
 	
@@ -106,12 +126,12 @@ def tweets(request):
 		tweet = Tweet.objects.order_by('-created_time')
 		return render(request,"twitter/tweets.html",{"tweets":tweet,"username":username})
 	else:
-		return redirect(site)
+		return redirect(resolve_url("Home"))
 
 def userLogout(request):
 	logout(request)
 	messages.info(request,("Logged out successfully"))
-	return redirect(site)
+	return redirect(resolve_url("Home"))
 
 
 
@@ -124,7 +144,7 @@ def profile(request):
 			fname = current_profile.user.first_name
 			lname = current_profile.user.last_name
 			followinfo = Followers.objects.get(profileuser = current_profile)
-			return render(request,"twitter/profile.html",{"date":date,"bio":current_profile.bio,"f_name":fname,"l_name":lname,"site":site,'image':current_profile.pic.url,'username':request.user.username,"followinfo":followinfo})
+			return render(request,"twitter/profile.html",{"date":date,"bio":current_profile.bio,"f_name":fname,"l_name":lname,'image':current_profile.pic.url,'username':request.user.username,"followinfo":followinfo})
 		elif request.method == "POST":
 			date = request.POST.get("Date_Birth")
 			bio = request.POST.get("Bio")
@@ -144,15 +164,15 @@ def profile(request):
 			pro = Profile.objects.get(user = request.user)
 			date = str(pro.birth_date)
 			bio = pro.bio
-			return render(request,"twitter/profile.html",{"date":date,"bio":bio,"f_name":pro.user.first_name,"l_name":pro.user.last_name,"site":site,'image':pro.pic.url,'username':request.user.username})
+			return render(request,"twitter/profile.html",{"date":date,"bio":bio,"f_name":pro.user.first_name,"l_name":pro.user.last_name,'image':pro.pic.url,'username':request.user.username})
 	else:
-		return redirect(f"{site}/login")
+		return redirect(resolve_url("login"))
 		
 def createTweet(request):
 	if request.user.is_authenticated:
 		if request.method == "GET":
 			user = request.user.username
-			return render(request,"twitter/createtweet.html",{'username':user,'site':site})
+			return render(request,"twitter/createtweet.html",{'username':user})
 		elif request.method == "POST":
 			file = request.FILES.get("tweet-pic",False)
 			content = request.POST.get("tweet")
@@ -163,9 +183,9 @@ def createTweet(request):
 			else:
 				newtweet.image="NULL"
 			newtweet.save()
-			return redirect(site)
+			return redirect(resolve_url("Home"))
 	else:
-		return redirect(site)
+		return redirect(resolve_url("Home"))
 	
 def userpage(request,**kwargs):
 	if request.user.is_authenticated:
@@ -176,6 +196,16 @@ def userpage(request,**kwargs):
 		currprof = Profile.objects.get(user=request.user)
 		tweet = Tweet.objects.filter(user=prof)
 		return render(request,"twitter/profileview.html",{"username":user.username,"firstname":user.first_name,"lastname":user.last_name,"bio":prof.bio,"dob":prof.birth_date,'image':prof.pic.url,"id":prof.id,"followinfo":followinfo,"tweetinfo":tweet,"currentprofile":currprof,"userprofile":prof})
+	else:
+		return redirect(resolve_url("Home"))
+
+def userTweets(request,**kwargs):
+	if request.user.is_authenticated:
+		requser = kwargs["username"][1:]
+		user = get_object_or_404(User,username=requser)
+		prof = Profile.objects.get(user=user)
+		tweets = Tweet.objects.filter(user=prof)
+		return render(request,"twitter/tweets.html",{"tweets":tweets.order_by('-created_time')})
 	else:
 		return redirect(resolve_url("Home"))
 
@@ -193,6 +223,7 @@ def tweet(request,**kwargs):
 			tweetreply.save()
 			tweet.replycount = len(Comment.objects.filter(tweet = tweet))
 			tweet.save()
-			return redirect(f"{site}tweet/{tweetid}")
+			redirecturl = str(resolve_url("tweet")+str(tweetid))
+			return redirect(redirecturl)
 	else:
-		return redirect(site)
+		return redirect(resolve_url("Home"))
