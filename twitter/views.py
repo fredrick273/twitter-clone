@@ -88,7 +88,7 @@ def register(request):
 		form = NewUserForm()
 		return render (request=request, template_name="twitter/Register.html", context={"register_form":form})
 	else:
-		return redirect(resolve_url("Home"))
+		return redirect(resolve_url("profile"))
 
 def userLogin(request):
 	if not request.user.is_authenticated:
