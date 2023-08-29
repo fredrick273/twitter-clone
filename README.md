@@ -41,13 +41,13 @@ To run this Twitter clone on your local machine, follow these steps:
 1. Clone the repository to your local machine:
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/fredrick273/twitter-clone
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd <project-directory>
+   cd twitter-clone
    ```
 
 3. Create a virtual environment (recommended) and install the project dependencies:
